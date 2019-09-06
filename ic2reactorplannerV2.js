@@ -631,7 +631,6 @@ var IC2components = {
     "heat-vent-overclocked" : function(){return HeatVent(1000,20,36);}, // Tested, works
     "heat-vent-component" : function(){return ComponentHeatVent(4)}, // Tested, works
     "heat-exchanger" : function(){return HeatExchanger(2500, 12, 4)},
-    "heat-exchanger-advanced" : function(){return HeatExchanger(2500, 12, 4)},
     "heat-exchanger-advanced" : function(){return HeatExchanger(10000, 24, 8)},
     "heat-exchanger-reactor" : function(){return HeatExchanger(5000, 0, 72)}, // Tested, works
     "heat-exchanger-component" : function(){return HeatExchanger(5000, 36, 0)},
