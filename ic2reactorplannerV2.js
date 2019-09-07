@@ -883,6 +883,9 @@ function GridItem(x,y,element){
 }
 
 function initialiseGrid(){
+    if(currentInterval)
+                    clearInterval(currentInterval);
+                currentInterval = null;
     reactorHullHeat = getInitialHeat();
     simulationTime = 0;
     totalPower = 0;
