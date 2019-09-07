@@ -609,7 +609,7 @@ function Reflector(maxDamage) {
     ClassReflector.acceptUraniumPulse = function(reactor, youX, youY, pulseX, pulseY, heatrun) {
         if (!heatrun) {
             var source = reactor.getItemAt(pulseX, pulseY);
-            source.acceptUraniumPulse(reactor, source, pulseX, pulseY, youX, youY, heatrun);
+            source.acceptUraniumPulse(reactor, pulseX, pulseY, youX, youY, heatrun);
         }
         else if (this.getDamage() + 1 >= this.getMaxDamage()) {
             reactor.setItemAt(youX, youY, null);
