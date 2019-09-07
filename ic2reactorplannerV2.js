@@ -883,6 +883,8 @@ function doReactorTick(){
     // Get the total and increase in power for display
     totalPower = reactor.getReactorEnergyOutput()*100;
     EUGen = Math.round(totalPower - lastPower)/20;
+    
+    if (EUGen == 0) return;
     lastPower = totalPower;
     document.getElementById("power-indicator").innerHTML = EUGen + " EU/t";
     document.getElementById("power-total-indicator").innerHTML = totalPower + "EU";
