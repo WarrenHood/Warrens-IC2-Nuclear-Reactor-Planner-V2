@@ -705,6 +705,13 @@ function makeComponent(name) {
     }
     return IC2components[name]();
 }
+
+function getInitialHeat() {
+    var initialHeat = document.getElementById("initial-heat").value/1;
+    if (initialHeat < 0) document.getElementById("initial-heat").value = "0";
+    if (initialHeat > 10000) document.getElementById("initial-heat").value = "10000";
+    return document.getElementById("initial-heat").value/1;
+}
 // reactor.getReactor()*100; Will give the total EU generated after n seconds where n = number of reactor.processChambers() calls.
 
 
@@ -876,15 +883,17 @@ function GridItem(x,y,element){
 }
 
 function initialiseGrid(){
-    reactorHullHeat = 0;
+    reactorHullHeat = getInitialHeat();
     simulationTime = 0;
     totalPower = 0;
     lastPower = 0;
     exploded = false;
     reactor = Reactor();
+    reactor.heat = getInitialHeat();
     heatTrackers = [];
     
     var fakeReactor = Reactor();
+    fakeReactor.heat = getInitialHeat();
     
     for(var i=0; i<reactorGrid.length; i++){
         var currentName = reactorGrid[i].element.className.replace("panel-cell","").trim();
@@ -1062,6 +1071,9 @@ window.onload = function(){
             reactorGrid[i].element.style.backgroundColor = "#8b8b8b";
         }
     };
+    
+    document.getElementById("initial-heat").onchange = initialiseGrid;
+    document.getElementById("initial-heat").onkeyup = initialiseGrid;
     
     document.getElementById("wrcode").onchange = loadReactorCode;
     document.getElementById("wrcode").onkeyup = loadReactorCode;
