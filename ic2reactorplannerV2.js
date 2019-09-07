@@ -948,6 +948,10 @@ function showHeat(){
             else 
                 reactorGrid[i].element.style.backgroundColor = "black";
         }
+        
+        if(reactorGrid[i].element.className.trim() != "panel-cell" && !reactor.reactorSlot[i])
+            reactorGrid[i].element.style.backgroundColor = "black";
+        
     }
 }
 
