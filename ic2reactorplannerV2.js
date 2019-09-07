@@ -302,9 +302,9 @@ function Reactor(){
 
 // Uranium class
 
-function Uranium(cells){
+function Uranium(cells, duration){
     
-    var duration = 20000;
+    duration = duration || 20000;
     
     var ClassUranium = AbstractDamageableReactorComponent( duration);
     
@@ -396,10 +396,20 @@ function Uranium(cells){
 
 // Mox class
 
-function Mox(){
+function Mox(cells, duration){
     
-    var ClassMox = {};
+    duration = duration || 10000;
     
+    var ClassMox = Uranium(cells, duration);
+    
+    ClassMox.acceptUraniumPulse = function(reactor, youX, youY, pulseX, pulseY, heatrun) {
+        if (!heatrun) {
+            var breederEffectiveness = reactor.getHeat() / reactor.getMaxHeat();
+            reactorOutput = 4.0 * breederEffectiveness + 1.0;
+            reactor.addOutput(reactorOutput);
+        }
+        return true;
+    }
     
     
     return ClassMox;
@@ -625,6 +635,9 @@ var IC2components = {
     "fuel-uranium-single" : function(){return Uranium(1);}, // Tested, works
     "fuel-uranium-dual" : function(){return Uranium(2);}, // Tested, works
     "fuel-uranium-quad" : function(){return Uranium(4);}, // Tested, works
+    "fuel-mox-single" : function(){return Mox(1)},
+    "fuel-mox-dual" : function(){return Mox(2)},
+    "fuel-mox-quad" : function(){return Mox(4)},
     "heat-vent" : function(){return HeatVent(1000,6,0);}, // Tested, works
     "heat-vent-advanced" : function(){return HeatVent(1000,12,0);}, // Tested, works
     "heat-vent-reactor" : function(){return HeatVent(1000,5,5);}, // Tested, works
@@ -886,8 +899,8 @@ function doReactorTick(){
     
     if (EUGen == 0) return;
     lastPower = totalPower;
-    document.getElementById("power-indicator").innerHTML = EUGen + " EU/t";
-    document.getElementById("power-total-indicator").innerHTML = totalPower + "EU";
+    document.getElementById("power-indicator").innerHTML = Math.round(EUGen,3) + " EU/t";
+    document.getElementById("power-total-indicator").innerHTML = Math.round(totalPower,3) + "EU";
     
     // Check the reactor heat
     reactorHullHeat = reactor.getHeat();
