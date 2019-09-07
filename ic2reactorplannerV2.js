@@ -905,7 +905,7 @@ function initialiseGrid(){
     var EUGen = fakeReactor.getReactorEnergyOutput() * 5;
 
     document.getElementById("heat-indicator").innerHTML = Math.round(reactorHullHeat,5) + " HU (" +Math.round(reactorHullHeat/100,5) + "%)";
-    document.getElementById("power-indicator").innerHTML = EUGen + " EU/t";
+    document.getElementById("power-indicator").innerHTML = Math.round(EUGen,3) + " EU/t";
     document.getElementById("power-total-indicator").innerHTML = "0 EU";
     document.getElementById("time-indicator").innerHTML = simulationTime + " seconds";
     getReactorCode();
