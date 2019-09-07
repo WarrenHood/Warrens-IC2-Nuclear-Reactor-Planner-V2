@@ -630,7 +630,7 @@ function Reflector(maxDamage) {
 function IridiumReflector() {
     var ClassIridiumReflector = AbstractReactorComponent();
     
-    ClassIridiumReflector.acceptUraniumPulse = function(reactor, youx, youY, pulseX, pulseY, heatrun) {
+    ClassIridiumReflector.acceptUraniumPulse = function(reactor, youX, youY, pulseX, pulseY, heatrun) {
         if (!heatrun) {
             source = reactor.getItemAt(pulseX, pulseY);
             source.acceptUraniumPulse(reactor, pulseX, pulseY, youX, youY, heatrun);
