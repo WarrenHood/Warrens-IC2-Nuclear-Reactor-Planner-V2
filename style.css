@@ -54,7 +54,7 @@ body{
 .panel-cell{
     background: #8b8b8b;
     background-repeat: no-repeat;
-    background-size: auto;
+    background-size: contain;
     box-sizing: border-box;
     width:36px;
     height:36px;
@@ -127,4 +127,12 @@ body{
 .condensator-lzh{
     background-image: url("images/Grid_LZH-Condensator.png");
 }
-
+.reflector{
+    background-image: url("images/24px-Grid_Neutron_Reflector.png");
+}
+.reflector-thick{
+    background-image: url("images/24px-Grid_Thick_Neutron_Reflector.png");
+}
+.reflector-iridium{
+    background-image: url("images/24px-Grid_Iridium_Neutron_Reflector.png");
+}

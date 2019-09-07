@@ -21,6 +21,8 @@ function AbstractReactorComponent() {
         return 0;
     }
     
+    ClassAbstractReactorComponent.isDamageable = function() {return false;}
+    
     ClassAbstractReactorComponent.getCurrentHeat = function(reactor, x, y) {
         return 0;
     }
@@ -402,7 +404,7 @@ function Mox(cells, duration){
     
     var ClassMox = Uranium(cells, duration);
     
-    ClassMox.acceptUraniumPulse = function(reactor, youX, youY, pulseX, pulseY, heatrun) {
+    ClassMox.acceptUraniumPulse = function(reactor, pulseX, pulseY, youX, youY, heatrun) {
         if (!heatrun) {
             var breederEffectiveness = reactor.getHeat() / reactor.getMaxHeat();
             reactorOutput = 4.0 * breederEffectiveness + 1.0;
@@ -601,6 +603,47 @@ function Condensator(){
     return ClassCondensator;
 }
 
+function Reflector(maxDamage) {
+    var ClassReflector = AbstractDamageableReactorComponent(maxDamage);
+    
+    ClassReflector.acceptUraniumPulse = function(reactor, youX, youY, pulseX, pulseY, heatrun) {
+        if (!heatrun) {
+            var source = reactor.getItemAt(pulseX, pulseY);
+            source.acceptUraniumPulse(reactor, source, pulseX, pulseY, youX, youY, heatrun);
+        }
+        else if (this.getDamage() + 1 >= this.getMaxDamage()) {
+            reactor.setItemAt(youX, youY, null);
+        }
+        else {
+            this.setDamage(this.getDamage() + 1);
+        }
+        return true;
+    }
+    
+    ClassReflector.influenceExplosion = function(reactor) {
+        return -1.0;
+    }
+    
+    return ClassReflector; 
+}
+
+function IridiumReflector() {
+    var ClassIridiumReflector = AbstractReactorComponent();
+    
+    ClassIridiumReflector.acceptUraniumPulse = function(reactor, youx, youY, pulseX, pulseY, heatrun) {
+        if (!heatrun) {
+            source = reactor.getItemAt(pulseX, pulseY);
+            source.acceptUraniumPulse(reactor, pulseX, pulseY, youX, youY, heatrun);
+        }
+        return true;
+    }
+    
+    ClassIridiumReflector.influenceExplosion = function(reactor) {
+        return -1.0;
+    }
+    
+    return ClassIridiumReflector;
+}
 
 
 function TEST(){
@@ -647,6 +690,11 @@ var IC2components = {
     "heat-exchanger-advanced" : function(){return HeatExchanger(10000, 24, 8)},
     "heat-exchanger-reactor" : function(){return HeatExchanger(5000, 0, 72)}, // Tested, works
     "heat-exchanger-component" : function(){return HeatExchanger(5000, 36, 0)},
+    
+    "reflector" : function(){return Reflector(30000)},
+    "reflector-thick" : function(){return Reflector(120000)},
+    "reflector-iridium" : function(){return IridiumReflector()}
+    
 }
 
 function makeComponent(name) {
@@ -702,6 +750,9 @@ var componentCodes = {
     "coolant-cell-60k" : "r",
     "condensator-rsh" : "s",
     "condensator-lzh" : "t",
+    "reflector" : "u",
+    "reflector-thick" : "v",
+    "reflector-iridium" : "w"
 }
 
 var componentNames = {
@@ -725,6 +776,9 @@ var componentNames = {
     "r" : "coolant-cell-60k",
     "s" : "condensator-rsh",
     "t" : "condensator-lzh",
+    "u" : "reflector",
+    "v" : "reflector-thick",
+    "w" : "reflector-iridium",
     "0" : ""
 }
 
@@ -875,11 +929,22 @@ function clearGrid(){
 function showHeat(){
     for(var i=0; i<heatTrackers.length; i++) {
         var comp = heatTrackers[i];
-        if(comp && comp.canStoreHeat()) {
+        if(comp && comp.canStoreHeat() && comp.getCurrentHeat() > 0) {
             var red = 255*comp.getCurrentHeat()/comp.getMaxHeat();
             var green = 255*(1-comp.getCurrentHeat()/comp.getMaxHeat());
             if(comp.getCurrentHeat() < comp.getMaxHeat())
                 reactorGrid[i].element.style.backgroundColor = "rgba("+red+","+green+",0.1)";
+            else 
+                reactorGrid[i].element.style.backgroundColor = "black";
+        }
+        
+        else if (comp && comp.isDamageable() && comp.getDamage() > 0) {
+            
+            var red = 255*comp.getDamage()/comp.getMaxDamage();
+            var blue = 255*(1-comp.getDamage()/comp.getMaxDamage());
+            
+            if (comp.getDamage() < comp.getMaxDamage())
+                reactorGrid[i].element.style.backgroundColor = "rgba("+red+",0,"+blue+",0.7)";
             else 
                 reactorGrid[i].element.style.backgroundColor = "black";
         }
